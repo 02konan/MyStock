@@ -1,0 +1,283 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<div id="employees-content" class="content-section">
+  <div id="toast-container"></div>
+  <div class="container-fluid">
+
+    <!-- Titre -->
+    <h2 class="mb-4 text-center p-3 text-white rounded shadow-sm w-100"
+        style="background-color: #0F6735;">
+      Gestion des Ventes
+    </h2>
+
+    <!-- Recherche + Filtre -->
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <label class="form-label">
+              <i class="fas fa-search me-2"></i>Recherche:
+            </label>
+            <input id="champrecherche"
+                   type="text"
+                   class="form-control"
+                   placeholder="Rechercher une vente...">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">
+              <i class="fas fa-th me-2"></i>Îlot
+            </label>
+            <select class="form-select" id="filtre-ilot">
+              <option value="">Tous</option>
+              {% for v in ventes %}
+              <option value="{{ v.nom_ilot }}">{{ v.nom_ilot }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-4 d-flex justify-content-end align-items-end">
+            <button class="btn"
+                    style="background-color: #058f8f; color: white;"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addVenteModal">
+              <i class="fas fa-shopping-cart me-2"></i>
+              Ajouter une Vente
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header"
+           style="background-color: #0F6735; border: none;">
+        <h5 class="card-title mb-0 text-white">
+          <i class="fas fa-shopping-cart me-2"></i>Liste des Ventes
+        </h5>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm text-center" id="Table">
+            <thead style="background-color: #f8f9fa;">
+              <tr>
+                <th>#CodeClient</th>
+                <th>Client</th>
+                <th>Référence Ilot</th>
+                <th>Référence Lot</th>
+                <th>Montant Prévu</th>
+                <th>Montant Vendu</th>
+                <th>Superficie</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for v in ventes %}
+              <tr>
+                <td><strong>{{ v.code_client }}</strong></td>
+                <td>{{ v.client_prenom }} {{ v.client_nom }}</td>
+                <td>{{ v.nom_ilot }}</td>
+                <td>{{ v.lot_id }}</td>
+                <td>{{ v.prix_total }}</td>
+                <td>{{ v.prix_vente }}</td>
+                <td>{{ v.superficie }} m²</td>
+                <td>{{ v.date_vente }}</td>
+                <td>
+                  <button class="btn btn-sm btn-edit"
+                          style="background-color: #3498db; color: white;"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editVenteModal"
+                          data-id="{{ v.id }}"
+                          data-client_id="{{ v.client_id }}"
+                          data-lot_id="{{ v.lot_id }}"
+                          data-date="{{ v.date_vente }}"
+                          data-montant="{{ v.prix_vente }}">
+                    <i class="fas fa-edit"></i>Modifier
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= AJOUT VENTE ================= -->
+
+<div class="modal fade" id="addVenteModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header"
+           style="background-color: #0F6735; color: white;">
+        <h5 class="modal-title">Ajouter une nouvelle Vente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/Ventes" method="POST">
+          <input type="text" name="vente_id">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Client*</strong></label>
+              <select name="client_id" class="form-select" required>
+                <option value="" required>--Selectioner--</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}">{{ c.nom }} {{ c.Prenom }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Lot*</strong></label>
+              <select name="lot_id" class="form-select" required>
+                <option value="" required>--Selectioner--</option>
+                {% for l in lots %}
+                <option value="{{ l.id }}">{{ l.numero }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Date*</strong></label>
+              <input type="date" name="date" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Montant*</strong></label>
+              <input type="number" step="0.01"
+                     name="montant"
+                     class="form-control"
+                     required>
+            </div>
+          </div>
+
+          <button type="submit"
+                  class="btn"
+                  style="background-color: #0F6735; color: white;">
+            Enregistrer
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODIFIER VENTE ================= -->
+
+<div class="modal fade" id="editVenteModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header"
+           style="background-color: #0F6735; color: white;">
+        <h5 class="modal-title">Modifier la Vente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/Ventes" method="POST">
+
+          <input type="hidden" name="vente_id" id="edit_vente_id">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Client*</strong></label>
+              <select name="client_id" id="edit_client_id" class="form-select"required>
+                <option value="" required>--Selectioner--</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}">{{ c.nom }} {{ c.Prenom }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Lot*</strong></label>
+              <select name="lot_id" id="edit_lot_id" class="form-select" required>
+                {% for l in lots %}
+                <option value="{{ l.id }}">{{ l.numero }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Date*</strong></label>
+              <input type="date" name="date" id="edit_date" class="form-control"  required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Montant*</strong></label>
+              <input type="number"
+                     step="0.01"
+                     name="montant"
+                     id="edit_montant"
+                     class="form-control"
+                     required>
+            </div>
+          </div>
+
+          <button type="submit"
+                  class="btn"
+                  style="background-color: #0F6735; color: white;">
+            Mettre à jour
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+document.querySelectorAll(".btn-edit").forEach(button => {
+  button.addEventListener("click", function() {
+    document.getElementById("edit_vente_id").value = this.dataset.id;
+    document.getElementById("edit_client_id").value = this.dataset.client_id;
+    document.getElementById("edit_lot_id").value = this.dataset.lot_id;
+    document.getElementById("edit_date").value = this.dataset.date;
+    document.getElementById("edit_montant").value = this.dataset.montant;
+  });
+});
+
+// Filtre Ilot
+document.getElementById('filtre-ilot').addEventListener('change', function() {
+  const selected = this.value.toLowerCase();
+  document.querySelectorAll('#Table tbody tr').forEach(row => {
+    row.style.display =
+      !selected || row.cells[2].textContent.toLowerCase().includes(selected)
+        ? ''
+        : 'none';
+  });
+});
+
+// Recherche
+document.getElementById('champrecherche').addEventListener('keyup', function() {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll('#Table tbody tr').forEach(row => {
+    row.style.display =
+      row.textContent.toLowerCase().includes(value)
+        ? ''
+        : 'none';
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+ <!-- Bootstrap JS -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Chart.js -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <!-- Custom JS -->
+  <script src="{{url_for('static', filename='script.js')}}" type="module" defer></script>
+  <script src="{{url_for('static', filename='pagination.js')}}"></script>
+  <script src="{{url_for('static', filename='rapport.js')}}"></script>
+{% if session['role']|lower == 'superadmin' %}
+  <script src="{{ url_for('static', filename='dashboardAdmin.js') }}"></script>
+  <script src="{{ url_for('static', filename='historique.js') }}"></script>
+{% else %}
+  <script src="{{ url_for('static', filename='dasboard.js') }}"></script>
+  <script src="{{ url_for('static', filename='historique.js') }}"></script>
+{% endif %}

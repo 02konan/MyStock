@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+{% block content %}
+<div id="historique-content" class="content-section">
+  <div class="container-fluid p-4">
+    <h2 class="mb-4 text-center p-3 text-white rounded shadow-sm w-100" style="background-color: #2980b9;">
+      Historique des opérations
+    </h2>
+
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Recherche:</label>
+            <input id="champrecherche" type="text" class="form-control" placeholder="Rechercher par référence, client, utilisateur..." />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><i class="fas fa-calendar me-2"></i>Date de début</label>
+            <input type="date" class="form-control" id="date-debut" />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><i class="fas fa-calendar me-2"></i>Date de fin</label>
+            <input type="date" class="form-control" id="date-fin" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label"><i class="fas fa-filter me-2"></i>Type d'action</label>
+            <select class="form-select" id="action-type">
+              <option value="tous" selected>Tous</option>
+              <option value="creation_lotissement">Création lotissement</option>
+              <option value="vente">Vente</option>
+              <option value="achat">Achat</option>
+              <option value="ajout_client">Ajout client</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Utilisateur</label>
+            <input type="text" class="form-control" id="filtre-utilisateur" placeholder="Nom ou identifiant" />
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-outline-secondary mt-2" id="reset-filtres"><i class="fas fa-undo me-1"></i>Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-header" style="background-color: #2980b9; border: none;">
+        <h5 class="card-title mb-0 text-white"><i class="fas fa-history me-2"></i>Journal des opérations</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm" id="TableHistorique">
+            <thead style="background-color: #f8f9fa;">
+              <tr>
+                <th><i class="fas fa-calendar-day me-2"></i>Date</th>
+                <th><i class="fas fa-clock me-2"></i>Heure</th>
+                <th><i class="fas fa-user me-2"></i>Utilisateur</th>
+                <th><i class="fas fa-tags me-2"></i>Type</th>
+                <th><i class="fas fa-building me-2"></i>Entité</th>
+                <th><i class="fas fa-info-circle me-2"></i>Détails</th>
+                <th><i class="fas fa-hashtag me-2"></i>Réf</th>
+                <th><i class="fas fa-cog me-2"></i>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historique_list">
+              {% set ns = namespace(prev=None) %}
+              {% for activite in historique %}
+                {% set a_date = activite.date|default(activite.date_pointage)|default('') %}
+                {% if a_date != ns.prev %}
+                  <tr class="table-secondary">
+                    <td colspan="8" style="font-weight:600; color:#2c3e50;">{{ a_date }}</td>
+                  </tr>
+                  {% set ns.prev = a_date %}
+                {% endif %}
+                <tr>
+                  <td>{{ a_date }}</td>
+                  <td><code>{{ activite.time|default(activite.heure_pointage)|default('') }}</code></td>
+                  <td><strong>{{ activite.user_name|default(activite.nom)|default('Inconnu') }}</strong></td>
+                  <td>
+                    {% set t = activite.action_type|default(activite.status)|default('Autre') %}
+                    {% if 'creation' in t|lower %}
+                      <span class="badge" style="background-color:#3498db;">{{ t }}</span>
+                    {% elif 'vente' in t|lower %}
+                      <span class="badge" style="background-color:#27ae60;">{{ t }}</span>
+                    {% elif 'achat' in t|lower %}
+                      <span class="badge" style="background-color:#f39c12;">{{ t }}</span>
+                    {% elif 'client' in t|lower %}
+                      <span class="badge" style="background-color:#8e44ad;">{{ t }}</span>
+                    {% else %}
+                      <span class="badge bg-secondary">{{ t }}</span>
+                    {% endif %}
+                  </td>
+                  <td><span style="color:#2980b9; font-weight:500;">{{ activite.entity|default(activite.section)|default('') }}</span></td>
+                  <td>{{ activite.details|default('') }}</td>
+                  <td>{{ activite.ref|default('') }}</td>
+                  <td>
+                    <a href="/historique/{{ activite.id|default(activite.employe_id)|default('#') }}" class="btn btn-sm" style="background-color:#3498db; color:white;"><i class="fas fa-eye me-1"></i>Voir</a>
+                  </td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td colspan="8" class="text-center">Aucune entrée d'historique trouvée.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

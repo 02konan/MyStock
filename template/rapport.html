@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<div id="document-content" class="content-section">
+  <div id="toast-container"></div>
+  <div class="container-fluid">
+            <h2 class="mb-4 text-center p-3 text-white rounded shadow-sm w-100" style="background-color: #0F6735;">Gestion des Documents</h2>
+    <!-- Search and Filter -->
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-12">
+            <label class="form-label"><i class="fas fa-search me-2"></i>Recherche:</label>
+            <input
+              id="champrecherche"
+              type="text"
+              class="form-control"
+              placeholder="Rechercher un document..."
+            />
+          </div>
+          <!-- <div class="col-md-3">
+            <label class="form-label"><i class="fas fa-th me-2"></i>Îlot</label>
+            <select class="form-select" id="filtre-ilot">
+              <option value="">Tous</option>
+              {% for ilot in ilots %}
+                  <option value="{{ ilot['nom_ilot'] }}">{{ ilot['nom_ilot'] }}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><i class="fas fa-th me-2"></i>lotissement</label>
+            <select class="form-select" id="filtre-ilot">
+              <option value="">Tous</option>
+              {% for ilot in ilots %}
+                  <option value="{{ ilot['nom_ilot'] }}">{{ ilot['nom_ilot'] }}</option>
+                {% endfor %}
+            </select>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <!-- Employees Table -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header" style="background-color: #0F6735; border: none;">
+        <h5 class="card-title mb-0 text-white"><i class="fas fa-users me-2"></i>Documents Enregistres </h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive"> 
+          <table class="table table-hover table-sm table-striped" id="Table">
+            <thead style="background-color: #f8f9fa;text-align: center;">
+              <tr>
+                <th><i class="fas fa-file-alt me-2"></i>Documents</th>
+                <th><i class="fas fa-envelope me-2"></i>Type de Document</th>
+                <th><i class="fas fa-coins me-2"></i>Code</th>
+                <th><i class="fas fa-calendar me-2"></i>Date d'Enregistrement</th>
+                <th><i class="fas fa-cog me-2"></i>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table-rapports" style="text-align: center;">
+             
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center"></ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

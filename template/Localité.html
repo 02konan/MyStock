@@ -1,0 +1,192 @@
+{% extends 'index.html' %} {% block content %}
+<div id="attendance-content" class="content-section">
+  <div class="container-fluid ">
+    <div class="toast-container p-3 position-fixed top-0 end-0">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="toast align-items-center text-bg-{{ 'success' if category == 'success' else 'danger' }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+    <h2
+      class="mb-4 text-center p-3 text-white rounded shadow-sm w-100"
+      style="background-color: #0F6735;"
+    >
+      Gestion des Achats de founitures
+    </h2>
+    <div class="card mb-2 border-0 shadow-sm">
+      <div class="card-body">
+          <div class="row g-3">
+          <div class="col-md-6 d-flex align-items-center gap-3 flex-wrap">
+            <label class="form-label"><i class="fas fa-search me-1 fa-fw"></i>Recherche:</label>
+            <input type="search" class="form-control" placeholder="chercher ici...">
+          </div>
+          <div class="col-md-3 d-flex align-items-center gap-3 flex-wrap">
+            <label class="form-label"><i class="fas fa-filter me-1 fa-fw"></i>Statut</label>
+            <select class="form-select">
+              <option selected>Tous les statuts</option>
+              <option>Présent</option>
+              <option>Absent</option>
+            </select>
+          </div>
+          <div class="col-md-3 d-flex justify-content-end align-items-end gap-2">
+           <button class="btn w-auto" style="background-color: #058f8f; color: white;" data-bs-toggle="modal" data-bs-target="#ajoutModal"><i class="fas fa-plus me-1 fa-fw"></i> Ajouter une Localité</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header" style="background-color: #0F6735; border: none;">
+        <h5 class="card-title mb-0 text-white"><i class="fas fa-map me-1 fa-fw"></i>Liste des Localité</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm" id="Table">
+            <thead style="background-color: #f8f9fa;text-align: center;">
+              <tr>
+                <th><i class="fas fa-map me-1 fa-fw"></i>Ville</th>
+                <th><i class="fas fa-ruler-combined me-1 fa-fw"></i>Superficie Total</th>
+                <th><i class="fas fa-coins me-1 fa-fw"></i>Superficie Vendue</th>
+                <th><i class="fas fa-file-lines me-1 fa-fw"></i>Description</th>
+                <th><i class="fas fa-filter me-1 fa-fw"></i>Statut</th>
+                <th><i class="fas fa-cog me-2"></i>Actions</th>
+              </tr>
+            </thead>
+            <tbody style="text-align: center;">
+              {%for l in localite%}
+              <tr>
+                <td>{{l.ville}}</td>
+                <td>{{ l.superifice_tt if l.superifice_tt is not none else 0 }}</td>
+                <td>{{ l.superifice_vd if l.superifice_vd is not none else 0 }}</td>
+                <td>{{l.description}}</td>
+                <td><span class="badge bg-{{'success' if l.status=='Actif' else 'warning'}}"><i class="fas fa-check-circle me-1"></i>{{l.status}}</span></td>
+                <td>
+                  <a
+                    href="#"
+                    class="btn btn-sm btn-edit"
+                    style="background-color: #3498db; color: white;"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ajoutModal"
+                    data-id="{{l.id}}"
+                    data-ville="{{l.ville}}"
+                    data-description="{{l.description}}"
+                    data-status="{{l.status}}"
+                  >
+                    <i class="fas fa-edit me-1"></i>Modifier
+                  </a>
+                  <a
+                    href=""
+                    class="btn btn-sm btn-edit"
+                    style="background-color: #e74c3c; color: white;"
+                    data-bs-toggle="modal"
+                    data-bs-target=""
+                  >
+                    <i class="fas fa-trash me-1"></i>Supprimer
+                  </a>
+                </td>
+              </tr>
+              {%endfor %}
+            </tbody>
+          </table>
+        </div>
+        <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center"></ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="ajoutModal"
+  tabindex="-1"
+  aria-labelledby="ajoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #0F6735; color: white; border: none;">
+        <h5 class="modal-title text-white" id="ajoutModal">Ajouter un Achats</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        id=""
+        method="POST"
+        action="{{ url_for('enregistrement_achats') }}"
+      >
+        <div class="modal-body">
+          <input
+              type="hidden"
+              class="form-control"
+              id="id"
+              name="id"
+              required
+            />
+          <div class="mb-3">
+            <label for="nom" class="form-label">Situation Geographique*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ville"
+              name="ville"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="description"
+              name="description"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Statut*</label>
+            <select class="form-select" id="status" name="status">
+              <option value="">Sélectionner un status</option>
+              <option value="Actif">Actif</option>
+              <option value="En Cours">En Cours</option>
+            </select>
+          </div>
+          
+        <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+          <button type="submit" class="btn" style="background-color: #0F6735; color: white;">Enregistrez</button>
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #95a5a6; color: white;"
+            data-bs-dismiss="modal"
+          >
+            Fermer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/static/filtrePresence.js"></script>
+<script>
+  document.querySelectorAll(".btn-edit").forEach(button=>{
+    button.addEventListener("click",function(){
+      document.getElementById("id").value=this.dataset.id
+      document.getElementById("ville").value=this.dataset.ville
+      document.getElementById("status").value=this.dataset.status
+      document.getElementById("description").value=this.dataset.description
+    })
+  })
+</script>
+{% endblock %}

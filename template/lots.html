@@ -1,0 +1,330 @@
+{% extends 'index.html' %}
+{% block content %}
+<div id="lots-content" class="content-section">
+  <div class="container-fluid p-4">
+    <div class="toast-container p-3 position-fixed top-0 end-0">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="toast align-items-center text-bg-{{ 'success' if category == 'success' else 'danger' }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+    
+    <h2 class="mb-4 text-center p-3 text-white rounded shadow-sm w-100" style="background-color: #0F6735;">
+      <i class="fas fa-cube me-2"></i>Gestion des Lots
+    </h2>
+    
+    <!-- Search and Filter -->
+    <div class="card mb-4 border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label"><i class="fas fa-search me-2"></i>Recherche:</label>
+            <input
+              id="champrecherche"
+              type="text"
+              class="form-control"
+              placeholder="Rechercher par nom lot, ilot..."
+            />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label"><i class="fas fa-th me-2"></i>Îlot</label>
+            <select class="form-select" id="filtre-ilot">
+              <option value="">Tous</option>
+              {% for ilot in ilots %}
+                  <option value="{{ ilot['nom_ilot'] }}">{{ ilot['nom_ilot'] }}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3 d-flex justify-content-end align-items-end gap-2">
+            <button class="btn" style="background-color: #058f8f; color: white;" data-bs-toggle="modal" data-bs-target="#addLotModal">
+              <i class="fas fa-plus me-2"></i>Ajouter Lot
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lots Table -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header" style="background-color: #0F6735; border: none;">
+        <h5 class="card-title mb-0 text-white"><i class="fas fa-cube me-2"></i>Liste des Lots</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm" id="Table">
+            <thead style="background-color: #f8f9fa;">
+              <tr>
+                <th><i class="fas fa-th me-2"></i>Îlot</th>
+                <th><i class="fas fa-hashtag me-2"></i>Nom Lot</th>
+                <th><i class="fas fa-expand me-2"></i>Superficie (m²)</th>
+                <th><i class="fas fa-money-bill-wave me-2"></i>Prix (FCFA)</th>
+                <th><i class="fas fa-filter me-1 fa-fw"></i>Statut</th>
+                <th style="text-align: center;"><i class="fas fa-cog me-2"></i>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+                  {% for lot in lots %}
+                  <tr>
+                    <td>{{ lot.nom_ilot|default('N/A') }}</td>
+                    <td><code>{{ lot.numero_lot|default('N/A') }}</code></td>
+                    <td>{{ lot.superficie|default(0) }}</td>
+                    <td>{{ lot.prix|default(0) }}</td>
+                    <td><span class="badge bg-{{'success' if lot.statut=='Disponible' else 'primary' if lot.statut=='Réservé' else 'danger'}}"><i class="fas fa-{{'check-circle' if lot.statut=='Disponible' else 'clock' if lot.statut == 'Reservé' else 'times-circle'}} me-1"></i>{{lot.statut}}</span></td>
+                    <td style="text-align: center;" class="text-nowrap">
+
+  <!-- Modifier -->
+  <button
+    class="btn btn-sm btn-edit"
+    style="background-color: #3498db; color: white;"
+    data-bs-toggle="modal"
+    data-bs-target="#editLotModal"
+    data-id="{{ lot.id }}"
+    data-ilot="{{ lot.nom_ilot }}"
+    data-superficie="{{ lot.superficie }}"
+    data-statut="{{ lot.statut }}"
+    data-prix="{{ lot.prix }}"
+  >
+    <i class="fas fa-edit me-1"></i>Modifier
+  </button>
+
+  <!-- Documents -->
+  <button
+    class="btn btn-sm btn-documents"
+    style="background-color: #e74c3c; color: white;"
+    data-id="{{ lot.id }}"
+  >
+    <i class="fas fa-file-alt me-1"></i>Documents
+  </button>
+
+                    </td>
+                  </tr>
+                  {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ajout -->
+<div class="modal fade" id="addLotModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #0F6735; color: white;">
+        <h5 class="modal-title">
+          <i class="fas fa-plus-circle me-2"></i>Ajouter un nouveau Lot
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/lots" method="POST">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Îlot*</strong></label>
+              <select class="form-select" name="id_ilot" required>
+                <option value="" disabled selected>-- Sélectionner --</option>
+                {% for ilot in ilots %}
+                  <option value="{{ ilot['ilot_id'] }}">{{ ilot['nom_ilot'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Superficie*</strong></label>
+              <input type="text" class="form-control" name="superficie" maxlength="6" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Statut</strong></label>
+              <select class="form-select" name="statut">
+                <option value="Disponible">Disponible</option>
+                <option value="Réservé">Réservé</option>
+                <option value="Vendu">Vendu</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Prix*</strong></label>
+              <input type="number" class="form-control" name="prix" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i>Annuler
+            </button>
+            <button type="submit" class="btn" style="background-color: #0F6735; color: white;">
+              <i class="fas fa-save me-1"></i>Enregistrer
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modidifier -->
+<div class="modal fade" id="editLotModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #0F6735; color: white;">
+        <h5 class="modal-title">
+          <i class="fas fa-edit me-2"></i>Modifier le Lot
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/lots" method="POST">
+          <input type="hidden" name="id_lot" id="edit_id_lot">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Îlot*</strong></label>
+              <input type="text" class="form-control" name="id_ilot" id="edit_code_ilot" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Superficie*</strong></label>
+              <input type="number" class="form-control" name="superficie" id="edit_superficie" maxlength="4" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label"><strong>Statut</strong></label>
+              <select class="form-select" name="statut" id="edit_statut" required>
+                <option value="Disponible">Disponible</option>
+                <option value="Réservé">Réservé</option>
+                <option value="Vendu">Vendu</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label"><strong>Prix*</strong></label>
+              <input type="number" class="form-control" name="prix" id="edit_prix" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i>Annuler
+            </button>
+            <button type="submit" class="btn" style="background-color: #0F6735; color: white;">
+              <i class="fas fa-save me-1"></i>Modifier
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Document -->
+ <div class="modal fade" id="documentLotModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #0F6735; color: white;">
+        <h5 class="modal-title">
+          <i class="fas fa-file-alt me-2"></i>Ajouter un document
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/upload_document_lot" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="lot_id" id="document_lot_id">
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label"><strong>Type document*</strong></label>
+              <input type="text" class="form-control" name="nom_document" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label"><strong>Fichier*</strong></label>
+              <input type="file" class="form-control" name="fichier_document" required>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i>Annuler
+            </button>
+            <button type="submit" class="btn" style="background-color: #0F6735; color: white;">
+              <i class="fas fa-save me-1"></i>Ajouter
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  // Filter table by ilot
+  document.getElementById('filtre-ilot').addEventListener('change', function() {
+    const selectedIlot = this.value;
+    const table = document.getElementById('Table');
+    const rows = table.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+      if (!selectedIlot || row.cells[0].textContent.includes(selectedIlot)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+
+  // Search functionality
+  document.getElementById('champrecherche').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const table = document.getElementById('Table');
+    const rows = table.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+  });
+
+  // Remplir formulaire modification
+document.querySelectorAll(".btn-edit").forEach(button => {
+  button.addEventListener("click", function () {
+    document.getElementById("edit_id_lot").value = this.dataset.id;
+    document.getElementById("edit_code_ilot").value = this.dataset.ilot;
+    document.getElementById("edit_superficie").value = this.dataset.superficie;
+    document.getElementById("edit_statut").value = this.dataset.statut;
+    document.getElementById("edit_prix").value = this.dataset.prix;
+  });
+});
+
+// Ouvrir modal document
+document.querySelectorAll(".btn-documents").forEach(button => {
+  button.addEventListener("click", function () {
+    document.getElementById("document_lot_id").value = this.dataset.id;
+    var myModal = new bootstrap.Modal(document.getElementById('documentLotModal'));
+    myModal.show();
+  });
+});
+</script>
+
+{% endblock %}

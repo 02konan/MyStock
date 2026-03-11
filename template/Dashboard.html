@@ -1,0 +1,202 @@
+<div id="dashboard-content" class="content-section">
+  <div class="container-fluid py-2">
+    <div class="row mb-4">
+      <!-- Présents aujourd'hui -->
+      <div class="col-md-3 mb-3">
+          <div class="card stat-card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h6 class="card-subtitle mb-1 text-muted">Présents aujourd'hui</h6>
+                          <h3 class="card-title mb-0" id="presents-count">0</h3>
+                      </div>
+                      <div class="stat-icon bg-primary-soft">
+                          <i class="fas fa-user-check text-primary"></i>
+                      </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 5px;">
+                      <div id="bar-present" class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Absents aujourd'hui -->
+      <div class="col-md-3 mb-3">
+          <div class="card stat-card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h6 class="card-subtitle mb-1 text-muted">Absents aujourd'hui</h6>
+                          <h3 class="card-title mb-0" id="absents-count">0</h3>
+                      </div>
+                      <div class="stat-icon bg-danger-soft">
+                          <i class="fas fa-user-times text-danger"></i>
+                      </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 5px;">
+                      <div id="bar-absent" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Retards aujourd'hui -->
+      <div class="col-md-3 mb-3">
+          <div class="card stat-card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h6 class="card-subtitle mb-1 text-muted">Retards aujourd'hui</h6>
+                          <h3 class="card-title mb-0" id="retard-count">0</h3>
+                      </div>
+                      <div class="stat-icon bg-warning-soft">
+                          <i class="fas fa-clock text-warning"></i>
+                      </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 5px;">
+                      <div id="bar-retard" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Total Employe -->
+      <div class="col-md-3 mb-3">
+          <div class="card stat-card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h6 class="card-subtitle mb-1 text-muted">Total Employee</h6>
+                          <h3 class="card-title mb-0" id="total-eleves">0</h3>
+                      </div>
+                      <div class="stat-icon bg-info-soft">
+                          <i class="fas fa-users text-info"></i>
+                      </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 5px;">
+                      <div id="total-eleves-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- Présence du mois -->
+<div class="col-md-3 mb-3">
+  <div class="card stat-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="card-subtitle mb-1 text-muted">Présence de ce mois</h6>
+          <h3 class="card-title mb-0" id="presence-mois-count">0</h3>
+        </div>
+        <div class="stat-icon bg-success-soft">
+          <i class="fas fa-user-check text-success"></i>
+        </div>
+      </div>
+      <div class="progress mt-3" style="height: 5px;">
+        <div id="bar-presence-mois" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Absence du mois -->
+<div class="col-md-3 mb-3">
+  <div class="card stat-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="card-subtitle mb-1 text-muted">Absence de ce mois</h6>
+          <h3 class="card-title mb-0" id="absence-mois-count">0</h3>
+        </div>
+        <div class="stat-icon bg-danger-soft">
+          <i class="fas fa-user-times text-danger"></i>
+        </div>
+      </div>
+      <div class="progress mt-3" style="height: 5px;">
+        <div id="bar-absence-mois" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Retards du mois -->
+<div class="col-md-3 mb-3">
+  <div class="card stat-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="card-subtitle mb-1 text-muted">Retards du mois</h6>
+          <h3 class="card-title mb-0" id="retard-mois-count">0</h3>
+        </div>
+        <div class="stat-icon bg-warning-soft">
+          <i class="fas fa-clock text-warning"></i>
+        </div>
+      </div>
+      <div class="progress mt-3" style="height: 5px;">
+        <div id="bar-retard-mois" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- Nouveaux Employe -->
+      <div class="col-md-3 mb-3">
+          <div class="card stat-card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h6 class="card-subtitle mb-1 text-muted">Nouveaux employés ce mois</h6>
+                          <h3 class="card-title mb-0" id="new-employee-count">0</h3>
+                      </div>
+                      <div class="stat-icon bg-info-soft">
+                          <i class="fas fa-user-plus text-info"></i>
+                      </div>
+                  </div>
+                  <div class="progress mt-3" style="height: 5px;">
+                      <div id="bar-new-employee" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    <!-- Charts Row -->
+    <div class="row mb-4">
+      <div class="col-md-8 mb-3">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Tendance de présence</h5>
+          </div>
+          <div class="card-body">
+            <canvas id="attendanceChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Répartition des présences</h5>
+          </div>
+          <div class="card-body">
+            <canvas id="attendancePieChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <div class="card">
+          <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Activité récente</h5>
+            <button class="btn btn-sm btn-outline-primary">Voir tout</button>
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush" id="recent-activity-list">
+              <!-- Les éléments seront ajoutés dynamiquement en JS -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
