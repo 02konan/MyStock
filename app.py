@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request,send_file, redirect, url_for, jsonify, send_from_directory, Response, session, flash
 from programme.read_superadmin import Card_data
 from programme.read_data import liste_client,liste_ventes,read_document,liste_lots,read_client,read_idlot,read_idlotis,liste_ilots,read_idrole,liste_utilisateur,liste_localite,read_idlocalite,liste_lotis
-from programme.Creat_data import Creat_document,get_fichier_from_db,Creat_document_lot,Creat_locale,Creat_Client,cret_User,Creat_Lotissement,Creat_ilot,Creat_Vente,Creat_lot
+from programme.Creat_data import Creat_document,get_fichier_from_db,Creat_document_lot,Creat_Achats,Creat_Client,cret_User,Creat_Lotissement,Creat_ilot,Creat_Vente,Creat_lot
 from programme.auth import Authentification
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -186,42 +186,41 @@ def Page_Historique():
     return render_template('historique.html', active_page='historique')
 
 # Gestion Foncier
-@app.route('/Localité')
+@app.route('/Achats')
 @login_required
-def Page_localité():
-    data=liste_localite(session['services'])
+def Page_Achats():
+    data=liste_localite()
     table=[]
     for d in data:
         if not d:
             continue
         information = {
                 "id": d[0] if len(d) > 0 else "",
-                "ville": d[1] if len(d) > 1 else "",
-                "superifice_tt": d[2] if len(d) > 2 else "",
-                "superifice_vd": d[3] if len(d) > 3 else "",
+                "code": d[1] if len(d) > 1 else "",
+                "Montant": d[2] if len(d) > 2 else "",
+                "date": d[3] if len(d) > 3 else "",
                 "description": d[4] if len(d) > 4 else "",
-                "status": d[5] if len(d) > 5 else "",
             }
         table.append(information)
         
-    return render_template('Localité.html', localite=table, active_page='Localité')
+    return render_template('Achats.html', localite=table, active_page='Achats')
 
-@app.route('/Localité',methods=['POST'])
+@app.route('/Achats',methods=['POST'])
 @login_required
 def enregistrement_achats():
     if request.method:
         id=request.form['id']
-        agences=session['agences']
-        Ville=request.form['ville']
+        code=f"Ach-{random.randint(100,999)}"
+        Montant=request.form['Montant']
         Desciption=request.form['description']
-        status=request.form['status']
-        result=Creat_locale(Ville,Desciption,status,id,agences)
+        date=request.form['date']
+        result=Creat_Achats(code,Montant,date,Desciption,id)
         if result is not True:
             flash(str(result),"danger")
         else:
-            flash('Nouvelle Localite ajouter avec success',"success")
+            flash(str(result),"success")
     
-    return redirect(url_for('Page_localité'))
+    return redirect(url_for('Page_Achats'))
 
 @app.route('/lots')
 @login_required

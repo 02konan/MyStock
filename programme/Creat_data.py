@@ -405,25 +405,26 @@ def Creat_lot(ilot_id, superficie, statut, agence_id, prix, id=None):
         print(f"Erreur MySQL : {e}")
         return False
 
-def Creat_locale(Ville, Desciption, status, id, agences):
+def Creat_Achats(code, Montant,date,Desciption,id):
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT COUNT(*) FROM localites WHERE id = %s", (id,))
+                cursor.execute("SELECT COUNT(*) FROM Achats WHERE id_Achats = %s", (id,))
                 result = cursor.fetchone()
                 existe = result[0] if result and result[0] else 0
                 if existe:
-                    sql_mj = """UPDATE localites
-                    SET ville=%s, description=%s, Status=%s
-                    WHERE id=%s and agence_id=%s
+                    sql_mj = """UPDATE Achats
+                    SET Montant=%s,  date=%s, description=%s
+                    WHERE id_Achats=%s
                     """
-                    cursor.execute(sql_mj, (Ville, Desciption, status, id, agences))
+                    cursor.execute(sql_mj, (Montant, date, Desciption, id))
+                    return f"Modification reussie avec success"
                 else:
-                    sql = "INSERT INTO localites(agence_id,ville,description,Status) VALUES(%s, %s, %s, %s)"
-                    cursor.execute(sql, (agences, Ville, Desciption, status))
+                    sql = "INSERT INTO Achats(code_achats, Montant,date,description) VALUES(%s, %s, %s, %s)"
+                    cursor.execute(sql, (code, Montant, date, Desciption))
 
                 conn.commit()
-                return True
+                return f"Insertion reussie avec success"
     except pymysql.MySQLError as e:
         print(f"Erreur MySQL : {e}")
         return False

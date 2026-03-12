@@ -134,6 +134,7 @@ def read_document(code_agence):
     except Exception as e:
         print("Erreur :", e)
         return []
+
 def liste_lotis(code_agence):
     try:
         with connexion() as conn:
@@ -200,16 +201,14 @@ WHERE agences.id=%s
         print("Erreur générale :", e)
         return []
 
-def liste_localite(code_agence):
+def liste_localite():
     try:
         with connexion() as conn:
             with conn.cursor() as cursor:
                 sql = """
-                SELECT id,ville,superficie_totale,surperficie_vendue,description,status 
-                FROM localites 
-                WHERE agence_id=%s
+                SELECT `id_achats`, `Montant`, `date`, `Description` FROM `Achats`
                 """
-                cursor.execute(sql, (code_agence,))
+                cursor.execute(sql)
                 return cursor.fetchall()
     except pymysql.MySQLError as e:
         print("Erreur MySQL :", e)

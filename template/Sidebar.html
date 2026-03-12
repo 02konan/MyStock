@@ -113,11 +113,11 @@
     </li>
 
     <!-- Section 2: Gestion Fonciere -->
-    <li class="sidebar-section-title"><i class="fas fa-city me-2"></i><strong>Gestion Fonciere</strong></li>
-    <li class="{% if active_page == 'Localité' %}active{% endif %}">
-      <form action="{{ url_for('Page_localité') }}" method="get" style="width:100%;">
+    <li class="sidebar-section-title"><i class="fas fa-city me-2"></i><strong>Approvisionnent</strong></li>
+    <li class="{% if active_page == 'Achats' %}active{% endif %}">
+      <form action="{{ url_for('Page_Achats') }}" method="get" style="width:100%;">
         <button type="submit" class="sidebar-btn">
-          <i class="fas fa-map-marker-alt"></i>Localité
+          <i class="fas fa-map-marker-alt"></i>Achats
         </button>
       </form>
     </li>

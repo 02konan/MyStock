@@ -51,22 +51,22 @@
           <table class="table table-hover table-sm" id="Table">
             <thead style="background-color: #f8f9fa;text-align: center;">
               <tr>
-                <th><i class="fas fa-map me-1 fa-fw"></i>Ville</th>
-                <th><i class="fas fa-ruler-combined me-1 fa-fw"></i>Superficie Total</th>
-                <th><i class="fas fa-coins me-1 fa-fw"></i>Superficie Vendue</th>
+                <th><i class="fas fa-map me-1 fa-fw"></i>#Code</th>
+                <th><i class="fas fa-ruler-combined me-1 fa-fw"></i>Montant</th>
+                <th><i class="fas fa-ruler-combined me-1 fa-fw"></i>Montant</th>
+                <th><i class="fas fa-ruler-combined me-1 fa-fw"></i>Date</th>
                 <th><i class="fas fa-file-lines me-1 fa-fw"></i>Description</th>
-                <th><i class="fas fa-filter me-1 fa-fw"></i>Statut</th>
                 <th><i class="fas fa-cog me-2"></i>Actions</th>
               </tr>
             </thead>
             <tbody style="text-align: center;">
               {%for l in localite%}
               <tr>
-                <td>{{l.ville}}</td>
-                <td>{{ l.superifice_tt if l.superifice_tt is not none else 0 }}</td>
-                <td>{{ l.superifice_vd if l.superifice_vd is not none else 0 }}</td>
+                <td>{{l.code}}</td>
+                <td>{{l.code}}</td>
+                <td>{{ l.Montant}}</td>
+                <td>{{ l.date}}</td>
                 <td>{{l.description}}</td>
-                <td><span class="badge bg-{{'success' if l.status=='Actif' else 'warning'}}"><i class="fas fa-check-circle me-1"></i>{{l.status}}</span></td>
                 <td>
                   <a
                     href="#"
@@ -75,9 +75,9 @@
                     data-bs-toggle="modal"
                     data-bs-target="#ajoutModal"
                     data-id="{{l.id}}"
-                    data-ville="{{l.ville}}"
+                    data-montant="{{l.montant}}"
                     data-description="{{l.description}}"
-                    data-status="{{l.status}}"
+                    data-date="{{l.date}}"
                   >
                     <i class="fas fa-edit me-1"></i>Modifier
                   </a>
@@ -124,7 +124,7 @@
       <form
         id=""
         method="POST"
-        action="{{ url_for('enregistrement_achats') }}"
+        action="/Achats"
       >
         <div class="modal-body">
           <input
@@ -135,12 +135,12 @@
               required
             />
           <div class="mb-3">
-            <label for="nom" class="form-label">Situation Geographique*</label>
+            <label for="nom" class="form-label">Montant*</label>
             <input
               type="text"
               class="form-control"
-              id="ville"
-              name="ville"
+              id="Montant"
+              name="Montant"
               required
             />
           </div>
@@ -155,12 +155,8 @@
             />
           </div>
           <div class="mb-3">
-            <label for="role" class="form-label">Statut*</label>
-            <select class="form-select" id="status" name="status">
-              <option value="">Sélectionner un status</option>
-              <option value="Actif">Actif</option>
-              <option value="En Cours">En Cours</option>
-            </select>
+            <label for="role" class="form-label">Date*</label>
+            <input type="date" class="form-control" name="date" id="date">
           </div>
           
         <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
